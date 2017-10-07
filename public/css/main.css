@@ -1,0 +1,12 @@
+header h1{
+    padding: 1.4em;
+    text-align: center;
+    font-size: 3em;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.btn {
+    margin-left: auto;
+    margin-right: auto;
+}
