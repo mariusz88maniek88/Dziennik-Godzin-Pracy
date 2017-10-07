@@ -19,6 +19,7 @@ include 'function.php';
                 <div class="row">
                     <div class="col-xs-12">
                         <h1>Dziennik Godzin Pracy</h1>
+                        <?php save_hours(); ?>
                     </div>
                 </div>
             </div> 

@@ -1,5 +1,5 @@
 
-                        <form method="get" action="wybor">
+                        <form method="get">
                          
                            <div class="form-group">
                                <p>
@@ -27,8 +27,8 @@
                            </div>
                            <div class="form-group">
                                <p>
-                                   <label for="czas_rozp_prz">Koniec przerwy: </label>
-                                   <input type="text" name="czas_rozp_prz" class="form-control" placeholder="Czas rozpoczęcia przerwy">
+                                   <label for="czas_kon_prz">Koniec przerwy: </label>
+                                   <input type="text" name="czas_kon_prz" class="form-control" placeholder="Czas rozpoczęcia przerwy">
                                </p>
                            </div>
                            <div class="form-hours">
