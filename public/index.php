@@ -1,7 +1,7 @@
 <?php 
 
 require '../system/db_connect.php';
-include 'function.php'; 
+include '../system/function.php'; 
 
 ?>
 <!DOCTYPE html>

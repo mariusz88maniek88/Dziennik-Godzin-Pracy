@@ -22,6 +22,7 @@ function show_from() {
     
 }
 
+
 /**
  * Zapisywanie czasu pracy do bazy
  */
@@ -37,11 +38,11 @@ function save_hours() {
         
         if( !empty($date) && !empty($poczatek_pracy) && !empty($koniec_pracy) && !empty($poczatek_przerwy) && !empty($koniec_przerwy) ) {
             
-            echo licz_przerwe();
+            echo czas_przepracowanego_dnia();
             
         } else {
             
-            echo '<h2>Wypełnij pola</h2>';
+            echo '<h2 class="alert alert-danger">Prosze wypłenić wszystkie Pola.</h2>';
             
         }
         
@@ -50,6 +51,10 @@ function save_hours() {
 }
 
 
+/**
+ * Funkcja zliczająca całkowity czas przerwy
+ * @return [[time]] [[Zwraca czas przerwy w minutach]]
+ */
 function licz_przerwe() {
     
     if($_GET['czas_rozp_prz'] && $_GET['czas_kon_prz']) {
@@ -63,6 +68,41 @@ function licz_przerwe() {
         return $przerwa;
         
     }
+    
+}
+
+
+/**
+ * funkcja odejmująca 15 min płatnej przerwy
+ * od jej całkowitego czasu
+ * @return [[zwraca czas netto przerwy]] 
+ */
+function przerwa_netto() {
+    
+    $prz_netto = licz_przerwe() - 15;
+    
+    return $prz_netto;
+    
+}
+
+
+/**
+ * Suma całkowita godzin netto pracy
+ * @return [[zwraca przepracowany dzien w godzinach]]
+ */
+function czas_przepracowanego_dnia() {
+    
+    if( isset($_GET['rozpoczecie_pracy']) && isset($_GET['koniec_pracy']) ) {
+        
+        $poczatek_pracy = $_GET['rozpoczecie_pracy'];
+        $koniec_pracy = $_GET['koniec_pracy'];
+        
+        $czas_pracy_brutto = strtotime($koniec_pracy) - strtotime($poczatek_pracy);
+        
+        
+    }
+    
+    return $czas_pracy_brutto;
     
 }
 
