@@ -38,7 +38,7 @@ function save_hours() {
         
         if( !empty($date) && !empty($poczatek_pracy) && !empty($koniec_pracy) && !empty($poczatek_przerwy) && !empty($koniec_przerwy) ) {
             
-            echo czas_przepracowanego_dnia();
+            echo czas_przepracowanego_dnia() . '<br>';
             
         } else {
             
@@ -98,11 +98,14 @@ function czas_przepracowanego_dnia() {
         $koniec_pracy = $_GET['koniec_pracy'];
         
         $czas_pracy_brutto = strtotime($koniec_pracy) - strtotime($poczatek_pracy);
-        
-        
+        $czas_pracy_netto = $czas_pracy_brutto  / 60;
+        $czas_pracy_modulo = $czas_pracy_netto % 60;
+        $czas_pracy_netto = $czas_pracy_netto / 60;
+        $czas_pracy_netto = (int)$czas_pracy_netto;
+        $wynik = $czas_pracy_netto +  "0.$czas_pracy_modulo";
     }
     
-    return $czas_pracy_brutto;
+    return $wynik;
     
 }
 
