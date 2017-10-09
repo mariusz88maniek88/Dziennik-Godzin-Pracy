@@ -39,6 +39,7 @@ function save_hours() {
         if( !empty($date) && !empty($poczatek_pracy) && !empty($koniec_pracy) && !empty($poczatek_przerwy) && !empty($koniec_przerwy) ) {
             
             echo czas_przepracowanego_dnia() . '<br>';
+            echo przerwa_netto() . '<br>';
             
         } else {
             
@@ -63,7 +64,6 @@ function licz_przerwe() {
         $kon_prz = $_GET['czas_kon_prz'];
         
         $przerwa = strtotime($kon_prz) - strtotime($pczk_prz);
-        $przerwa = $przerwa / 60;
         
         return $przerwa;
         
@@ -79,7 +79,8 @@ function licz_przerwe() {
  */
 function przerwa_netto() {
     
-    $prz_netto = licz_przerwe() - 15;
+    $przerwa_unix = 15 * 60;
+    $prz_netto = licz_przerwe() - $przerwa_unix;
     
     return $prz_netto;
     
@@ -97,18 +98,37 @@ function czas_przepracowanego_dnia() {
         $poczatek_pracy = $_GET['rozpoczecie_pracy'];
         $koniec_pracy = $_GET['koniec_pracy'];
         
-        $czas_pracy_brutto = strtotime($koniec_pracy) - strtotime($poczatek_pracy);
+        $czas_pracy_brutto = strtotime($koniec_pracy) - strtotime($poczatek_pracy) - przerwa_netto();
         $czas_pracy_netto = $czas_pracy_brutto  / 60;
         $czas_pracy_modulo = $czas_pracy_netto % 60;
+        $czas_pracy_modulo = czas_pracy_modulo($czas_pracy_modulo);
         $czas_pracy_netto = $czas_pracy_netto / 60;
         $czas_pracy_netto = (int)$czas_pracy_netto;
-        $wynik = $czas_pracy_netto +  "0.$czas_pracy_modulo";
+        $wynik = $czas_pracy_netto . "." . $czas_pracy_modulo;
     }
     
-    return $wynik;
+    return $wynik ;
     
 }
 
 
+/**
+ * Funkcja służąca do poprawnego wyświetlania minut po przecinku
+ */
+function czas_pracy_modulo($czas_pracy_modulo) {
+    
+    if($czas_pracy_modulo <= 9) {
+        
+        $czas_pracy_modulo = 0.0 . $czas_pracy_modulo;
+        
+    } elseif ($czas_pracy_modulo == 1) {
+        
+        $czas_pracy_modulo = round($czas_pracy_modulo);
+        
+    }
+    
+    return $czas_pracy_modulo;
+    
+}
 
 ?>
