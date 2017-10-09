@@ -121,7 +121,7 @@ function czas_pracy_modulo($czas_pracy_modulo) {
         
         $czas_pracy_modulo = 0.0 . $czas_pracy_modulo;
         
-    } elseif ($czas_pracy_modulo == 1) {
+    } elseif ($czas_pracy_modulo ) {
         
         $czas_pracy_modulo = round($czas_pracy_modulo);
         
