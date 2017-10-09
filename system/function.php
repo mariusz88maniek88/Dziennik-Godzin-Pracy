@@ -38,8 +38,25 @@ function save_hours() {
         
         if( !empty($date) && !empty($poczatek_pracy) && !empty($koniec_pracy) && !empty($poczatek_przerwy) && !empty($koniec_przerwy) ) {
             
-            echo czas_przepracowanego_dnia() . '<br>';
-            echo przerwa_netto() . '<br>';
+            $date = htmlspecialchars($date);
+            $poczatek_pracy = htmlspecialchars($poczatek_pracy);
+            $koniec_pracy = htmlspecialchars($koniec_pracy);
+            $poczatek_przerwy = htmlspecialchars($koniec_przerwy);
+            $koniec_przerwy = htmlspecialchars($koniec_przerwy);
+            
+            $query = "INSERT INTO czas VALUES(null, '$date', '$poczatek_pracy', '$koniec_pracy', '$poczatek_przerwy', '$koniec_przerwy'," . licz_przerwe() . "," . przerwa_netto() . "," . czas_przepracowanego_dnia() . ")";
+            
+            @$db_connect = new mysqli(DB_HOST, DB_USERr, DB_PASS, DB_NAME);
+            
+            if( @$db_connect->query($query)){
+                
+                echo 'Godziny zostały zapisane';
+                
+            } else {
+                
+                echo "<h2 class='alert alert-danger'>Wystapił błąd podczas zapisywania.</h2>";
+                
+            }
             
         } else {
             

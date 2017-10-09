@@ -1,6 +1,6 @@
 <?php 
 
-require '../system/db_connect.php';
+include '../system/db_connect.php';
 include '../system/function.php'; 
 
 ?>
