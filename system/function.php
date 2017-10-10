@@ -15,12 +15,44 @@ function show_from() {
             case 'godziny' :
                 include 'form.php';
                 break;
+            case 'edit' :
+                include 'form_edit.php';
+                break;
+            case 'delete' :
+                include 'delete.php';
+                break;
                                 
         } 
         
     }
     
 }
+
+
+function delete_day_hours() {
+    
+    if(isset($_GET['tak_delete'])) {
+    
+        @$db_connect = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+         
+                $query = "DELETE * FROM users WHERE id=" . $row['id'] ;
+                
+                if( @$db_connect->query($query) ) {
+                    
+                    header("Location:index.php");
+                    exit;
+                    
+                }
+    
+    } else {
+    
+        header("Location:index.php");
+        exit;
+    
+    }
+    
+}
+
 
 
 /**
@@ -57,6 +89,7 @@ function save_hours() {
                 echo "<h2 class='alert alert-danger'>Wystapił błąd podczas zapisywania.</h2>";
                 
             }
+            $db_connect->close();
             
         } else {
             
@@ -174,5 +207,64 @@ function czas_pracy_modulo($czas_pracy_modulo) {
     return $czas_pracy_modulo;
     
 }
+
+
+function show_table_hours() {
+    
+    @$db_connect = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    
+    if( !@$db_connect->connect_errno ) {
+        
+        $query = "SELECT * FROM czas";
+        
+        if( $result = @$db_connect->query($query)  ) {
+            ?>
+            
+            <table class="table table-hover">
+                <tr>
+                    <th>Data</th>
+                    <th>Cz.Rozp.</th>
+                    <th>Cz.Zako.</th>
+                    <th>Roz.Przer.</th>
+                    <th>Zak.Przer.</th>
+                    <th>Przerwa</th>
+                    <th>Przerwa(-15min)</th>
+                    <th>SUMA</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            
+            <?php
+            
+            while( $row_table = $result->fetch_assoc() ) {
+                
+                echo '<tr>';
+                echo '<td>' . $row_table['date'] . '</td>';
+                echo '<td>' . $row_table['poczatek_pracy'] . '</td>';
+                echo '<td>' . $row_table['koniec_pracy'] . '</td>';
+                echo '<td>' . $row_table['poczatek_przerwy'] . '</td>';
+                echo '<td>' . $row_table['koniec_przerwy'] . '</td>';
+                echo '<td>' . $row_table['przerwa_cala'] . '</td>';
+                echo '<td>' . $row_table['przerwa_15minut'] . '</td>';
+                echo '<td>' . $row_table['suma_godz'] . '</td>';
+                echo '<td><a href="index.php?action=wybor&wybor=edit&id=' . $row_table['id'] . '">Edytuj</td>';
+                echo '<td><a href="index.php?action=wybor&wybor=delete&id=' . $row_table['id'] . '">Usuń</td>';
+                
+            }
+          
+            echo '</table>';
+            
+            
+        }
+        
+    } else {
+        
+        echo 'Wystąpił błąd podczas połączenia z serwerem.';
+        
+    }
+    
+}
+
+
 
 ?>

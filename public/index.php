@@ -46,18 +46,9 @@ include '../system/function.php';
                 </div>
                 <div class="col-sm-12 col-md-4">
                     <div class="tabela_wynikow">
-                        <table class="table table-hover">
-                            <tr>
-                                <th>Data</th>
-                                <th>Cz.Rozp.</th>
-                                <th>Cz.Zako.</th>
-                                <th>Roz.Przer.</th>
-                                <th>Zak.Przer.</th>
-                                <th>Przerwa</th>
-                                <th>Przerwa(-15min)</th>
-                                <th>SUMA</th>
-                            </tr>
-                        </table>
+                        
+                        <?php show_table_hours(); ?>
+                        
                     </div>
                 </div>
             </div>
