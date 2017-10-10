@@ -44,9 +44,9 @@ function save_hours() {
             $poczatek_przerwy = htmlspecialchars($koniec_przerwy);
             $koniec_przerwy = htmlspecialchars($koniec_przerwy);
             
-            $query = "INSERT INTO czas VALUES(null, '$date', '$poczatek_pracy', '$koniec_pracy', '$poczatek_przerwy', '$koniec_przerwy'," . licz_przerwe() . "," . przerwa_netto() . "," . czas_przepracowanego_dnia() . ")";
+            $query = "INSERT INTO czas VALUES(null, '$date', '$poczatek_pracy', '$koniec_pracy', '$poczatek_przerwy', '$koniec_przerwy'," . licz_przerwe_min() . "," . przerwa_netto_min() . "," . czas_przepracowanego_dnia() . ")";
             
-            @$db_connect = new mysqli(DB_HOST, DB_USERr, DB_PASS, DB_NAME);
+            @$db_connect = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
             
             if( @$db_connect->query($query)){
                 
@@ -90,8 +90,22 @@ function licz_przerwe() {
 
 
 /**
+ * Funkcja zliczająca całkowity czas przerwy
+ * @return [[time]] [[Zwraca czas przerwy w minutach]]
+ */
+function licz_przerwe_min() {
+    
+    $przerwa_cal = licz_przerwe() / 60;
+    $przerwa_cal = htmlspecialchars($przerwa_cal);
+    
+    return $przerwa_cal;
+    
+}
+
+
+/**
  * funkcja odejmująca 15 min płatnej przerwy
- * od jej całkowitego czasu
+ * od jej całkowitego czasu do wyliczen( unix)
  * @return [[zwraca czas netto przerwy]] 
  */
 function przerwa_netto() {
@@ -100,6 +114,19 @@ function przerwa_netto() {
     $prz_netto = licz_przerwe() - $przerwa_unix;
     
     return $prz_netto;
+    
+}
+
+/**
+ * funkcja odejmująca 15 min płatnej przerwy
+ * od jej całkowitego czasu do zapisu w bazie ( min)
+ * @return [[zwraca czas netto przerwy]] 
+ */
+function przerwa_netto_min() {
+    
+    $przerwa_fin = przerwa_netto() / 60;
+    
+    return $przerwa_fin;
     
 }
 
