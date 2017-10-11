@@ -19,7 +19,7 @@ function show_from() {
                 include 'form_edit.php';
                 break;
             case 'delete' :
-                include 'delete.php';
+                delete_day_hours();
                 break;
                                 
         } 
@@ -27,32 +27,6 @@ function show_from() {
     }
     
 }
-
-
-function delete_day_hours() {
-    
-    if(isset($_GET['tak_delete'])) {
-    
-        @$db_connect = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-         
-                $query = "DELETE * FROM users WHERE id=" . $row['id'] ;
-                
-                if( @$db_connect->query($query) ) {
-                    
-                    header("Location:index.php");
-                    exit;
-                    
-                }
-    
-    } else {
-    
-        header("Location:index.php");
-        exit;
-    
-    }
-    
-}
-
 
 
 /**
@@ -209,6 +183,9 @@ function czas_pracy_modulo($czas_pracy_modulo) {
 }
 
 
+/**
+ * Funkcja wyświetlajaca tabele godzin
+ */
 function show_table_hours() {
     
     @$db_connect = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
@@ -249,6 +226,7 @@ function show_table_hours() {
                 echo '<td>' . $row_table['suma_godz'] . '</td>';
                 echo '<td><a href="index.php?action=wybor&wybor=edit&id=' . $row_table['id'] . '">Edytuj</td>';
                 echo '<td><a href="index.php?action=wybor&wybor=delete&id=' . $row_table['id'] . '">Usuń</td>';
+                echo '</tr>';
                 
             }
           
@@ -263,8 +241,42 @@ function show_table_hours() {
         
     }
     
+    
+    
 }
 
 
+/**
+ * Usuwanie wiersza z godzinami
+ */
+function delete_day_hours() {
+    
+ @$db_connect = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    
+    if( !@$db_connect->connect_errno ) {
+        
+        $query = "SELECT * FROM czas";
+        
+        if( $result = @$db_connect->query($query)  ) {
+            
+           if( $row_table = $result->fetch_assoc() ) {
+                
+                @$db_connect = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+         
+                $query = "DELETE FROM czas WHERE id=" . $row_table['id'];
+                
+                @$db_connect->query($query) ; 
+               
+            }
+          
+        }
+        
+    } else {
+        
+        echo 'Wystąpił błąd podczas połączenia z serwerem.';
+        
+    }
+    
+}
 
 ?>
