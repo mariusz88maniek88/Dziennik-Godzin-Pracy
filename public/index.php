@@ -18,8 +18,14 @@ include '../system/function.php';
             <div class="container">
                 <div class="row">
                     <div class="col-xs-12">
-                        <h1>Dziennik Godzin Pracy</h1>
-                        <?php save_hours(); ?>
+                       <div class="show_table">
+                           <h1>Dziennik Godzin Pracy</h1>
+                            <?php save_hours(); ?>
+                            <?php add_urlop(); ?>
+                       </div>
+                       <div class="time">
+                           <?php echo suma_godzin(); ?>
+                       </div>
                     </div>
                 </div>
             </div> 

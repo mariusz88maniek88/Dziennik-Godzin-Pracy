@@ -1,5 +1,5 @@
 
-                        <form method="get">
+                        <form method="get" action="index.php?action=wybor&wybor=urlop">
                          
                            <div class="form-group">
                                <p>

@@ -47,7 +47,7 @@ function save_hours() {
             $date = htmlspecialchars($date);
             $poczatek_pracy = htmlspecialchars($poczatek_pracy);
             $koniec_pracy = htmlspecialchars($koniec_pracy);
-            $poczatek_przerwy = htmlspecialchars($koniec_przerwy);
+            $poczatek_przerwy = htmlspecialchars($poczatek_przerwy);
             $koniec_przerwy = htmlspecialchars($koniec_przerwy);
             
             $query = "INSERT INTO czas VALUES(null, '$date', '$poczatek_pracy', '$koniec_pracy', '$poczatek_przerwy', '$koniec_przerwy'," . licz_przerwe_min() . "," . przerwa_netto_min() . "," . czas_przepracowanego_dnia() . ")";
@@ -57,6 +57,8 @@ function save_hours() {
             if( @$db_connect->query($query)){
                 
                 echo 'Godziny zostały zapisane';
+                header("Location:index.php");
+                exit();
                 
             } else {
                 
@@ -241,7 +243,7 @@ function show_table_hours() {
         
     }
     
-    
+    $db_connect->close();
     
 }
 
@@ -259,16 +261,89 @@ function delete_day_hours() {
         
         if( $result = @$db_connect->query($query)  ) {
             
-           if( $row_table = $result->fetch_assoc() ) {
-                
-                @$db_connect = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-         
-                $query = "DELETE FROM czas WHERE id=" . $row_table['id'];
-                
-                @$db_connect->query($query) ; 
+           while( $row_table = $result->fetch_assoc() ) {
+             
+               $row = $row_table['id'];
                
             }
           
+        } else {
+            
+            echo "<p class=\"alert alert-danger\">Wystapił błąd.</p>";
+            
+        }
+        
+    } else {
+        
+        echo '<p class="alert alert-danger">Wystąpił błąd podczas połączenia z serwerem.</p>';
+        
+    }
+    
+    $db_connect->close();
+}
+
+
+/**
+ * Funkcja dodająca godziny urlopu
+ */
+function add_urlop() {
+    
+    if (isset($_GET['zapisz_urlop'])) {
+        
+        $date_urlop = $_GET['data_urlop'];
+        $urlop = $_GET['godz_urlop'];
+        
+        if( !empty($date_urlop) && !empty($urlop) ) {
+            
+            $date_urlop = htmlspecialchars($date_urlop);
+            $urlop = htmlspecialchars($urlop);
+            
+            $query = "INSERT INTO czas VALUES(null, '$date_urlop', ' ', ' ', ' ', ' ', ' ', ' ','$urlop'  )";
+            
+            
+            
+            @$db_connect = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+            
+            if( @$db_connect->query($query)){
+                
+                echo 'Godziny zostały zapisane';
+                
+            } else {
+                
+                echo "<h2 class='alert alert-danger'>Wystapił błąd podczas zapisywania.</h2>";
+                
+            }
+            $db_connect->close();
+            
+        } else {
+            
+            echo '<h2 class="alert alert-danger">Prosze wypłenić wszystkie Pola.</h2>';
+            
+        }
+        
+    }
+    
+}
+
+
+function suma_godzin() {
+    
+    @$db_connect = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    
+    if( !@$db_connect->connect_errno ) {
+        
+        $query = "SELECT * FROM czas";
+        
+        if( $result = @$db_connect->query($query)  ) {
+            $suma_dnia = 0;
+            while( $row_table = $result->fetch_assoc() ) {
+                     
+                $suma_dnia = $suma_dnia + $row_table['suma_godz']++;
+                
+            }
+            
+          return $suma_dnia; 
+            
         }
         
     } else {
@@ -276,6 +351,8 @@ function delete_day_hours() {
         echo 'Wystąpił błąd podczas połączenia z serwerem.';
         
     }
+    
+    $db_connect->close();
     
 }
 
