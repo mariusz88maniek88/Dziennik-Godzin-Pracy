@@ -1,5 +1,5 @@
 <?php 
-
+ob_start();
 /**
  * Funkcja wyświetlająca wybór formularza
  * na stronie indeksu
@@ -223,7 +223,7 @@ function show_table_hours() {
                 echo '<td>' . $row_table['przerwa_cala'] . '</td>';
                 echo '<td>' . $row_table['przerwa_15minut'] . '</td>';
                 echo '<td>' . $row_table['suma_godz'] . '</td>';
-                echo '<td><a href="index.php?action=wybor&wybor=edit&id=' . $row_table['id'] . '">Edytuj</a></td>';
+                echo '<td><a href="index.php?edit=' . $row_table['id'] . '">Edytuj</a></td>';
                 echo '<td><a href="index.php?delete=' . $row_table['id'] . '">Usuń</a></td>';
                 echo '</tr>';
                 
@@ -234,13 +234,13 @@ function show_table_hours() {
             
         }
         
-        if(isset($_GET['delete'])) {
-            
+        if( isset($_GET['delete']) ) {
             $delete_id = $_GET['delete'];
             $query_delete = "DELETE FROM czas WHERE id=$delete_id";
-            @$db_connect->query($query_delete);
-            header("Location:index.php");
-            exit;
+            if(@$db_connect->query($query_delete)){
+               header("Location:index.php");
+               exit;
+            } 
             
         }
         
