@@ -23,9 +23,6 @@ include '../system/function.php';
                             <?php save_hours(); ?>
                             <?php add_urlop(); ?>
                        </div>
-                       <div class="time">
-                           <?php echo suma_godzin(); ?>
-                       </div>
                     </div>
                 </div>
             </div> 
@@ -57,6 +54,23 @@ include '../system/function.php';
                         
                     </div>
                 </div>
+                
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-md-6"></div>
+                <div class="col-sm-12 col-md-6">
+                   <div class="show_time">
+                    <h4>
+                        <?php
+                        
+                        echo 'Suma godzin<strong style="font-size:1.4em;">: ' . suma_godzin() . '</strong>';
+                        
+                        ?>
+                    </h4>
+                </div>
+               </div>  
             </div>
         </div>
     </section>

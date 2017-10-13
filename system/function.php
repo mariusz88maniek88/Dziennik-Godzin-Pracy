@@ -47,7 +47,7 @@ function save_hours() {
             $poczatek_przerwy = htmlspecialchars($poczatek_przerwy);
             $koniec_przerwy = htmlspecialchars($koniec_przerwy);
             
-            $query = "INSERT INTO czas VALUES(null, '$date', '$poczatek_pracy', '$koniec_pracy', '$poczatek_przerwy', '$koniec_przerwy'," . licz_przerwe_min() . "," . przerwa_netto_min() . "," . czas_przepracowanego_dnia() . ")";
+            $query = "INSERT INTO czas VALUES(null, '$date', '$poczatek_pracy', '$koniec_pracy', '$poczatek_przerwy', '$koniec_przerwy'," . licz_przerwe_min() . "," . przerwa_netto_min() . "," . czas_przepracowanego_dnia_mod() . "," . czas_przepracowanego_dnia_int() . "," . suma_dnia() . ")";
             
             @$db_connect = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
             
@@ -138,10 +138,9 @@ function przerwa_netto_min() {
 
 
 /**
- * Suma całkowita godzin netto pracy
- * @return [[zwraca przepracowany dzien w godzinach]]
+ * Suma całkowita godzin netto pracy w postaci Int
  */
-function czas_przepracowanego_dnia() {
+function czas_przepracowanego_dnia_int() {
     
     if( isset($_GET['rozpoczecie_pracy']) && isset($_GET['koniec_pracy']) ) {
         
@@ -154,10 +153,44 @@ function czas_przepracowanego_dnia() {
         $czas_pracy_modulo = czas_pracy_modulo($czas_pracy_modulo);
         $czas_pracy_netto = $czas_pracy_netto / 60;
         $czas_pracy_netto = (int)$czas_pracy_netto;
-        $wynik = $czas_pracy_netto . "." . $czas_pracy_modulo;
+        $wynik = $czas_pracy_netto;
     }
     
     return $wynik ;
+    
+}
+
+
+/**
+ * Suma całkowita minut netto pracy w postaci Int
+ */
+function czas_przepracowanego_dnia_mod() {
+    
+    if( isset($_GET['rozpoczecie_pracy']) && isset($_GET['koniec_pracy']) ) {
+        
+        $poczatek_pracy = $_GET['rozpoczecie_pracy'];
+        $koniec_pracy = $_GET['koniec_pracy'];
+        
+        $czas_pracy_brutto = strtotime($koniec_pracy) - strtotime($poczatek_pracy) - przerwa_netto();
+        $czas_pracy_netto = $czas_pracy_brutto  / 60;
+        $czas_pracy_modulo = $czas_pracy_netto % 60;
+        $czas_pracy_modulo = czas_pracy_modulo($czas_pracy_modulo);
+        $wynik = $czas_pracy_modulo;
+    }
+    
+    return $wynik ;
+    
+}
+
+
+/**
+ * Suma całkowita godzin i minut netto pracy dnia w postaci float
+ */
+function suma_dnia() {
+    
+    $day_finish = czas_przepracowanego_dnia_int() . "." . czas_przepracowanego_dnia_mod();
+    $day_finish = czas_pracy_modulo($day_finish);
+    return $day_finish;
     
 }
 
@@ -270,7 +303,7 @@ function add_urlop() {
             $date_urlop = htmlspecialchars($date_urlop);
             $urlop = htmlspecialchars($urlop);
             
-            $query = "INSERT INTO czas VALUES(null, '$date_urlop', ' ', ' ', ' ', ' ', ' ', ' ','$urlop'  )";
+            $query = "INSERT INTO czas VALUES(null, '$date_urlop', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '$urlop','$urlop'  )";
             
             
             
@@ -300,6 +333,9 @@ function add_urlop() {
 }
 
 
+/**
+ * Funkcja sumujaca wszystkie godziny z miesiaca
+ */
 function suma_godzin() {
     
     @$db_connect = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
@@ -309,14 +345,25 @@ function suma_godzin() {
         $query = "SELECT * FROM czas";
         
         if( $result = @$db_connect->query($query)  ) {
-            $suma_dnia = 0;
+            $suma_dnia_int = 0;
+            $suma_dnia_mod = 0;
             while( $row_table = $result->fetch_assoc() ) {
                      
-                $suma_dnia = $suma_dnia + $row_table['suma_godz']++;
+                $suma_dnia_int = $suma_dnia_int + $row_table['int_sum']++;
+                $suma_dnia_mod = $suma_dnia_mod + $row_table['modulo']++;
                 
             }
             
-          return $suma_dnia; 
+            $suma_dnia_mod_mod = $suma_dnia_mod % 60;
+            $suma_dnia_mod_int = $suma_dnia_mod / 60;
+            $suma_dnia_mod_int = (int)$suma_dnia_mod_int;
+            
+            $suma_dnia_int = $suma_dnia_int + $suma_dnia_mod_int;
+            $suma_dnia_int = $suma_dnia_int . "." . $suma_dnia_mod_mod;
+            
+    
+            return $suma_dnia_int . '<br>'; 
+          
             
         }
         
