@@ -256,7 +256,7 @@ function show_table_hours() {
                 echo '<td>' . $row_table['przerwa_cala'] . '</td>';
                 echo '<td>' . $row_table['przerwa_15minut'] . '</td>';
                 echo '<td>' . $row_table['suma_godz'] . '</td>';
-                echo '<td><a href="index.php?edit=' . $row_table['id'] . '">Edytuj</a></td>';
+                echo '<td><a href="index.php?action=wybor&wybor=edit&id=' . $row_table['id'] . '">Edytuj</a></td>';
                 echo '<td><a href="index.php?delete=' . $row_table['id'] . '">Usuń</a></td>';
                 echo '</tr>';
                 
