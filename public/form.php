@@ -4,13 +4,13 @@
                            <div class="form-group">
                                <p>
                                    <label for="data">Data: </label>
-                                   <input type="text" name="data" class="form-control" placeholder="Wpisz datę">
+                                   <input type="date" name="data" class="form-control" placeholder="Wpisz datę">
                                </p>
                            </div>
                            <div class="form-group">
                                <p>
                                    <label for="rozpoczecie_pracy">Rozpoczecie pracy(Data i czas): </label>
-                                   <input type="date" name="rozpoczecie_pracy" class="form-control" placeholder="RRRR-MM-DD GG:MM">
+                                   <input type="text" name="rozpoczecie_pracy" class="form-control" placeholder="RRRR-MM-DD GG:MM">
                                </p>
                            </div>
                             <div class="form-group">
