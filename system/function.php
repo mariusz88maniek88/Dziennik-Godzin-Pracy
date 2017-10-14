@@ -364,6 +364,7 @@ function suma_godzin() {
             }
             
             $suma_dnia_mod_mod = $suma_dnia_mod % 60;
+            $suma_dnia_mod_mod = czas_pracy_modulo_suma_dnia($suma_dnia_mod_mod);
             $suma_dnia_mod_int = $suma_dnia_mod / 60;
             $suma_dnia_mod_int = (int)$suma_dnia_mod_int;
             
@@ -383,6 +384,26 @@ function suma_godzin() {
     }
     
     $db_connect->close();
+    
+}
+
+
+/**
+ * Funkcja służąca do poprawnego wyświetlania minut po przecinku
+ */
+function czas_pracy_modulo_suma_dnia($suma_dnia_mod_mod) {
+    
+    if($suma_dnia_mod_mod <= 9) {
+        
+        $suma_dnia_mod_mod = 0.0 . $suma_dnia_mod_mod;
+        
+    } elseif ($suma_dnia_mod_mod ) {
+        
+        $suma_dnia_mod_mod = round($suma_dnia_mod_mod);
+        
+    }
+    
+    return $suma_dnia_mod_mod;
     
 }
 
