@@ -16,7 +16,7 @@ function show_from() {
                 include 'form.php';
                 break;
             case 'edit' :
-                include 'form_edit.php';
+                show_edit_form();
                 break;
                                 
         } 
@@ -386,7 +386,66 @@ function suma_godzin() {
     $db_connect->close();
     
 }
+ 
 
+function show_edit_form() {
+    
+    global $db_connect;
+    
+    if(isset($_GET['id'])) {
+                   
+        $id_edit = $_GET['id'];
+                
+    } 
+    
+    if(!$db_connect->connect_errno ) {
+        
+        $query = "SELECT * FROM czas WHERE id=$id_edit";
+        
+        if( $result = $db_connect->query($query)  ) {
+            
+               while( $edit = $result->fetch_assoc() ) {
+                
+                    $edit_date = $edit['date'];
+                    $edit_pocz_pracy = $edit['poczatek_pracy'];
+                    $edit_kon_pracy = $edit['koniec_pracy'];
+                    $edit_pocz_przerwy = $edit['poczatek_przerwy'];
+                    $edit_kon_przerwy = $edit['koniec_przerwy'];
+            
+            }
+            
+            if( isset($_POST['zaktualizuj_godziny']) ) {
+              echo 'Działa';
+            }
+            include '../public/form_edit.php';
+    
+        }
+    
+    }
+    
+    /**if( isset($_GET['zaktualizuj_godziny']) ) {
+        echo 'chuj';
+        $query = "UPDATE czas 
+        SET date='$edit_date', poczatek_pracy='$edit_pocz_pracy', koniec_pracy='$edit_kon_pracy', poczatek_przerwy='$edit_pocz_przerwy', koniec_przerwy='$edit_kon_przerwy'," . licz_przerwe_min() . "," . przerwa_netto_min() . "," . czas_przepracowanego_dnia_mod() . "," . czas_przepracowanego_dnia_int() . "," . suma_dnia() . " WHERE id=$id_edit)"; 
+        
+        if( $db_connect->query($query)){
+                
+                echo 'Godziny zostały zaktualizowane';
+                header("Location:index.php");
+                exit();
+                
+            } else {
+                
+                echo "<h2 class='alert alert-danger'>Wystapił błąd podczas zapisywania.</h2>";
+                
+            }
+            $db_connect->close();
+        
+    } else {
+        echo 'nie ustawiona';
+    }
+    */
+}
 
 
 ?>
