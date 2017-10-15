@@ -20,6 +20,7 @@ include '../system/function.php';
                     <div class="col-xs-12">
                        <div class="show_table">
                            <h1>Dziennik Godzin Pracy</h1>
+                           <h2><strong><?php date_date(); ?></strong></h2>
                             <?php save_hours(); ?>
                             <?php add_urlop(); ?>
                        </div>
@@ -48,6 +49,7 @@ include '../system/function.php';
                     
                 </div>
                 <div class="col-sm-12 col-md-4">
+                   
                     <div class="tabela_wynikow">
                         
                         <?php show_table_hours(); ?>

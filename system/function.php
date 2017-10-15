@@ -15,9 +15,6 @@ function show_from() {
             case 'godziny' :
                 include 'form.php';
                 break;
-            case 'edit' :
-                show_edit_form();
-                break;
                                 
         } 
         
@@ -90,7 +87,7 @@ function licz_przerwe() {
         
         return $przerwa;
         
-    }
+    } 
     
 }
 
@@ -224,7 +221,7 @@ function show_table_hours() {
     
     if( !$db_connect->connect_errno ) {
         
-        $query = "SELECT * FROM czas";
+        $query = "SELECT * FROM czas ORDER BY date ASC";
         
         if( $result = $db_connect->query($query)  ) {
             ?>
@@ -256,7 +253,6 @@ function show_table_hours() {
                 echo '<td>' . $row_table['przerwa_cala'] . '</td>';
                 echo '<td>' . $row_table['przerwa_15minut'] . '</td>';
                 echo '<td>' . $row_table['suma_godz'] . '</td>';
-                echo '<td><a href="index.php?action=wybor&wybor=edit&id=' . $row_table['id'] . '">Edytuj</a></td>';
                 echo '<td><a href="index.php?delete=' . $row_table['id'] . '">Usuń</a></td>';
                 echo '</tr>';
                 
@@ -388,63 +384,34 @@ function suma_godzin() {
 }
  
 
-function show_edit_form() {
+function date_date() {
+
+
+$miesiac=array('Jan' => 'Stycznia',
+            'Feb' => 'Luty',
+   'Mar' => 'Marzec',
+   'Apr' => 'Kwiecień',
+   'May' => 'Maj',
+   'Jun' => 'Czerwiec',
+   'Jul' => 'Lipiec',
+   'Aug' => 'Sierpień',
+   'Sep' => 'Wrzesień',
+   'Oct' => 'Pazdziernik',
+   'Nov' => 'Listopad',
+   'Dec' => 'Grudzień');
+
+
+$month = date("M"); 
+$day = date("j"); 
+$year = date('Y');
     
-    global $db_connect;
+ 
+echo $day . ' '; 
+echo $miesiac[$month] . ' '; 
+echo $year; 
+
+
     
-    if(isset($_GET['id'])) {
-                   
-        $id_edit = $_GET['id'];
-                
-    } 
-    
-    if(!$db_connect->connect_errno ) {
-        
-        $query = "SELECT * FROM czas WHERE id=$id_edit";
-        
-        if( $result = $db_connect->query($query)  ) {
-            
-               while( $edit = $result->fetch_assoc() ) {
-                
-                    $edit_date = $edit['date'];
-                    $edit_pocz_pracy = $edit['poczatek_pracy'];
-                    $edit_kon_pracy = $edit['koniec_pracy'];
-                    $edit_pocz_przerwy = $edit['poczatek_przerwy'];
-                    $edit_kon_przerwy = $edit['koniec_przerwy'];
-            
-            }
-            
-            if( isset($_POST['zaktualizuj_godziny']) ) {
-              echo 'Działa';
-            }
-            include '../public/form_edit.php';
-    
-        }
-    
-    }
-    
-    /**if( isset($_GET['zaktualizuj_godziny']) ) {
-        echo 'chuj';
-        $query = "UPDATE czas 
-        SET date='$edit_date', poczatek_pracy='$edit_pocz_pracy', koniec_pracy='$edit_kon_pracy', poczatek_przerwy='$edit_pocz_przerwy', koniec_przerwy='$edit_kon_przerwy'," . licz_przerwe_min() . "," . przerwa_netto_min() . "," . czas_przepracowanego_dnia_mod() . "," . czas_przepracowanego_dnia_int() . "," . suma_dnia() . " WHERE id=$id_edit)"; 
-        
-        if( $db_connect->query($query)){
-                
-                echo 'Godziny zostały zaktualizowane';
-                header("Location:index.php");
-                exit();
-                
-            } else {
-                
-                echo "<h2 class='alert alert-danger'>Wystapił błąd podczas zapisywania.</h2>";
-                
-            }
-            $db_connect->close();
-        
-    } else {
-        echo 'nie ustawiona';
-    }
-    */
 }
 
 
