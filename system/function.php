@@ -1,5 +1,6 @@
 <?php 
 ob_start();
+include 'validation.php';
 /**
  * Funkcja wyświetlająca wybór formularza
  * na stronie indeksu
@@ -32,39 +33,47 @@ function save_hours() {
     
     if (isset($_GET['zapisz_godziny'])) {
         
-        $date = $_GET['data'];
-        $poczatek_pracy = $_GET['rozpoczecie_pracy'];
-        $koniec_pracy = $_GET['koniec_pracy'];
-        $poczatek_przerwy = $_GET['czas_rozp_prz'];
-        $koniec_przerwy = $_GET['czas_kon_prz'];
+        if(preg_match('@^20[0-9]{2}-[0-9]{2}-[0-9]{2}$@', $_GET['data']) && preg_match('@^20[0-9]{2}-[0-9]{2}-[0-9]{2} [0-9]{1,2}:[0-9]{1,2}$@', $_GET['rozpoczecie_pracy']) && preg_match('@^20[0-9]{2}-[0-9]{2}-[0-9]{2} [0-9]{1,2}:[0-9]{1,2}$@', $_GET['koniec_pracy']) && preg_match('@^[0-9]{1,2}:[0-9]{1,2}$@', $_GET['czas_rozp_prz']) && preg_match('@^[0-9]{1,2}:[0-9]{1,2}$@', $_GET['czas_kon_prz'])) {
         
-        if( !empty($date) && !empty($poczatek_pracy) && !empty($koniec_pracy) && !empty($poczatek_przerwy) && !empty($koniec_przerwy) ) {
-            
-            $date = htmlspecialchars($date);
-            $poczatek_pracy = htmlspecialchars($poczatek_pracy);
-            $koniec_pracy = htmlspecialchars($koniec_pracy);
-            $poczatek_przerwy = htmlspecialchars($poczatek_przerwy);
-            $koniec_przerwy = htmlspecialchars($koniec_przerwy);
-            
-            $query = "INSERT INTO czas VALUES(null, '$date', '$poczatek_pracy', '$koniec_pracy', '$poczatek_przerwy', '$koniec_przerwy'," . licz_przerwe_min() . "," . przerwa_netto_min() . "," . czas_przepracowanego_dnia_mod() . "," . czas_przepracowanego_dnia_int() . "," . suma_dnia() . ")";
-            
-            if( $db_connect->query($query)){
-                
-                echo 'Godziny zostały zapisane';
-                header("Location:index.php");
-                exit();
-                
+            $date = $_GET['data'];
+            $poczatek_pracy = $_GET['rozpoczecie_pracy'];
+            $koniec_pracy = $_GET['koniec_pracy'];
+            $poczatek_przerwy = $_GET['czas_rozp_prz'];
+            $koniec_przerwy = $_GET['czas_kon_prz'];
+
+            if( !empty($date) && !empty($poczatek_pracy) && !empty($koniec_pracy) && !empty($poczatek_przerwy) && !empty($koniec_przerwy) ) {
+
+                $date = htmlspecialchars($date);
+                $poczatek_pracy = htmlspecialchars($poczatek_pracy);
+                $koniec_pracy = htmlspecialchars($koniec_pracy);
+                $poczatek_przerwy = htmlspecialchars($poczatek_przerwy);
+                $koniec_przerwy = htmlspecialchars($koniec_przerwy);
+
+                $query = "INSERT INTO czas VALUES(null, '$date', '$poczatek_pracy', '$koniec_pracy', '$poczatek_przerwy', '$koniec_przerwy'," . licz_przerwe_min() . "," . przerwa_netto_min() . "," . czas_przepracowanego_dnia_mod() . "," . czas_przepracowanego_dnia_int() . "," . suma_dnia() . ")";
+
+                if( $db_connect->query($query)){
+
+                    echo 'Godziny zostały zapisane';
+                    header("Location:index.php");
+                    exit();
+
+                } else {
+
+                    echo "<h2 class='alert alert-danger'>Wystapił błąd podczas zapisywania.</h2>";
+
+                }
+                $db_connect->close();
+
             } else {
-                
-                echo "<h2 class='alert alert-danger'>Wystapił błąd podczas zapisywania.</h2>";
-                
+
+                echo '<h2 class="alert alert-danger">Prosze wypłenić wszystkie Pola.</h2>';
+
             }
-            $db_connect->close();
             
-        } else {
-            
-            echo '<h2 class="alert alert-danger">Prosze wypłenić wszystkie Pola.</h2>';
-            
+         } else {
+    
+        echo "<p class=\"alert alert-danger\">Proszę o wpisanie poprawnego formatu do pól wg podanych poniżej formularza.</p>";
+
         }
         
     }
@@ -303,34 +312,42 @@ function add_urlop() {
     
     if (isset($_GET['zapisz_urlop'])) {
         
-        $date_urlop = $_GET['data_urlop'];
-        $urlop = $_GET['godz_urlop'];
-        
-        if( !empty($date_urlop) && !empty($urlop) ) {
+        if( preg_match('@^20[0-9]{2}-[0-9]{2}-[0-9]{2}$@', $_GET['data_urlop']) &&  preg_match('@^[0-9]{1,2}:[0-9]{1,2}$@', $_GET['godz_urlop'])) {
             
-            $date_urlop = htmlspecialchars($date_urlop);
-            $urlop = htmlspecialchars($urlop);
-            
-            $query = "INSERT INTO czas VALUES(null, '$date_urlop', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '$urlop','$urlop'  )";
-            
-            
-            if( $db_connect->query($query)){
-                
-                echo 'Godziny zostały zapisane';
-                header("Location:index.php");
-                exit;
-                
+            $date_urlop = $_GET['data_urlop'];
+            $urlop = $_GET['godz_urlop'];
+
+            if( !empty($date_urlop) && !empty($urlop) ) {
+
+                $date_urlop = htmlspecialchars($date_urlop);
+                $urlop = htmlspecialchars($urlop);
+
+                $query = "INSERT INTO czas VALUES(null, '$date_urlop', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '$urlop','$urlop'  )";
+
+
+                if( $db_connect->query($query)){
+
+                    echo 'Godziny zostały zapisane';
+                    header("Location:index.php");
+                    exit;
+
+                } else {
+
+                    echo "<h2 class='alert alert-danger'>Wystapił błąd podczas zapisywania.</h2>";
+
+                }
+                $db_connect->close();
+
             } else {
-                
-                echo "<h2 class='alert alert-danger'>Wystapił błąd podczas zapisywania.</h2>";
-                
+
+                echo '<h2 class="alert alert-danger">Prosze wypłenić wszystkie Pola.</h2>';
+
             }
-            $db_connect->close();
             
         } else {
-            
-            echo '<h2 class="alert alert-danger">Prosze wypłenić wszystkie Pola.</h2>';
-            
+    
+        echo "<p class=\"alert alert-danger\">Proszę o wpisanie poprawnego formatu do pól wg podanych poniżej formularza.</p>";
+
         }
         
     }
@@ -388,7 +405,7 @@ function date_date() {
 
 
 $miesiac=array('Jan' => 'Stycznia',
-            'Feb' => 'Luty',
+   'Feb' => 'Luty',
    'Mar' => 'Marzec',
    'Apr' => 'Kwiecień',
    'May' => 'Maj',
