@@ -1,6 +1,6 @@
 <?php 
 ob_start();
-include 'validation.php';
+
 /**
  * Funkcja wyświetlająca wybór formularza
  * na stronie indeksu
